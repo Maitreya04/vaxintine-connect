@@ -55,21 +55,11 @@ const LandingStep = ({ onStart }: LandingStepProps) => {
         whileHover={{ scale: 1.05, boxShadow: '0 8px 30px hsl(350 72% 46% / 0.25)' }}
         whileTap={{ scale: 0.97 }}
         onClick={onStart}
-        className="mt-10 px-14 py-4 rounded-full bg-primary text-primary-foreground font-body font-medium text-lg shadow-lg hover:shadow-xl transition-all"
+        className="mt-10 px-14 py-4 rounded-xl border border-primary/20 bg-primary text-primary-foreground font-body font-semibold text-lg shadow-lg hover:shadow-xl transition-all"
       >
         Pick a Date
       </motion.button>
 
-      {/* Bottom decorative hearts */}
-      <motion.img
-        src={heartsImg}
-        alt=""
-        aria-hidden
-        initial={{ y: 40, opacity: 0 }}
-        animate={{ y: 0, opacity: 0.3 }}
-        transition={{ delay: 0.8, duration: 1 }}
-        className="w-32 md:w-44 mt-10 select-none rotate-180"
-      />
     </motion.div>
   );
 };

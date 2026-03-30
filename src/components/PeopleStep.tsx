@@ -34,17 +34,17 @@ const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient,
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col items-center min-h-screen px-6 py-6"
+      className="flex flex-col items-center min-h-screen px-4 md:px-6 py-6 pb-32 md:pb-12"
     >
       {/* Back button */}
       <motion.div
         initial={{ x: -10, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        className="self-start mb-8"
+        className="self-start mb-4 md:mb-8"
       >
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 font-body text-sm text-muted-foreground hover:text-primary transition-colors"
+          className="flex items-center gap-1.5 font-body text-sm text-foreground/80 hover:text-primary transition-colors border border-primary/20 hover:border-primary/40 px-3 py-1.5 md:px-4 md:py-2 rounded-md bg-background shadow-sm"
         >
           <ArrowLeft className="w-4 h-4" />
           Back
@@ -62,7 +62,7 @@ const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient,
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.15 }}
-        className="font-body text-muted-foreground text-sm mb-8"
+        className="font-body text-muted-foreground text-sm mb-5 md:mb-8"
       >
         who deserves a shot of love?
       </motion.p>
@@ -74,37 +74,32 @@ const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient,
         className="w-full max-w-md space-y-5"
       >
         {/* Date & Time chips */}
-        <div className="flex flex-wrap gap-2 justify-center">
-          <span className="inline-flex items-center gap-2 bg-primary/5 rounded-full px-5 py-2.5 font-body text-sm text-primary border border-primary/15">
-            <CalendarDays className="w-3.5 h-3.5" />
+        <div className="flex flex-wrap gap-2 md:gap-3 justify-center">
+          <span className="inline-flex items-center gap-2 bg-background shadow-sm rounded-lg px-4 py-2.5 font-body text-sm text-primary border border-primary/20">
+            <CalendarDays className="w-4 h-4" />
             {format(date, 'EEEE, MMM d')}
           </span>
-          <span className="inline-flex items-center gap-2 bg-primary/5 rounded-full px-5 py-2.5 font-body text-sm text-primary border border-primary/15">
-            <Clock className="w-3.5 h-3.5" />
-            <input
-              type="text"
-              value={time}
-              onChange={(e) => onTimeChange(e.target.value)}
-              className="bg-transparent w-20 focus:outline-none text-primary font-body"
-            />
+          <span className="inline-flex items-center gap-2 bg-background shadow-sm rounded-lg px-4 py-2.5 font-body text-sm text-primary border border-primary/20">
+            <Clock className="w-4 h-4" />
+            <span className="font-medium px-1">{time}</span>
           </span>
         </div>
 
         {/* Recipient input */}
-        <div className="flex gap-2">
+        <div className="flex gap-2.5">
           <input
             type="text"
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="name or email..."
-            className="flex-1 rounded-full border border-primary/25 bg-card/50 backdrop-blur-sm px-5 py-3.5 font-body text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all"
+            className="flex-1 rounded-xl border border-primary/20 bg-background/50 backdrop-blur-sm px-4 py-3 font-body text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all shadow-sm"
           />
           <motion.button
             onClick={handleAdd}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:shadow-lg transition-shadow"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-[52px] h-[52px] rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:shadow-lg transition-all border border-primary/20"
           >
             <Plus className="w-5 h-5" />
           </motion.button>
@@ -119,13 +114,13 @@ const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient,
                 initial={{ opacity: 0, scale: 0.9, y: -5 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="flex items-center justify-between bg-card/60 backdrop-blur-sm rounded-full border border-primary/15 px-5 py-3 shadow-sm"
+                className="flex items-center justify-between bg-background shadow-sm rounded-lg border border-primary/20 px-4 py-2.5"
               >
-                <span className="flex items-center gap-2 font-body text-sm text-foreground">
-                  <Heart className="w-3.5 h-3.5 text-primary fill-primary" />
+                <span className="flex items-center gap-2.5 font-body text-sm text-foreground font-medium">
+                  <Heart className="w-4 h-4 text-primary fill-primary/20" strokeWidth={1.5} />
                   {r}
                 </span>
-                <button onClick={() => onRemoveRecipient(r)} className="text-muted-foreground hover:text-primary transition-colors p-1 rounded-full hover:bg-primary/10">
+                <button onClick={() => onRemoveRecipient(r)} className="text-muted-foreground hover:text-destructive transition-colors p-1.5 rounded-md hover:bg-destructive/10">
                   <X className="w-4 h-4" />
                 </button>
               </motion.div>
@@ -160,7 +155,7 @@ const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient,
           whileTap={{ scale: 0.98 }}
           onClick={onSend}
           disabled={recipients.length === 0}
-          className="w-full rounded-full bg-primary text-primary-foreground py-4 font-body font-semibold text-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:shadow-none flex items-center justify-center gap-2"
+          className="w-full rounded-xl bg-primary text-primary-foreground py-4 font-body font-semibold text-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-60 disabled:bg-muted disabled:text-muted-foreground disabled:border-muted-foreground/30 disabled:cursor-not-allowed disabled:shadow-none flex items-center justify-center gap-2 border border-primary/20"
         >
           <Send className="w-5 h-5" />
           Send Invite {recipients.length > 0 && `(${recipients.length})`}

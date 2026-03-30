@@ -17,8 +17,9 @@ export function useVaxintine() {
     if (idx > 0) setStep(STEP_ORDER[idx - 1]);
   }, [step]);
 
-  const selectDate = useCallback((d: Date) => {
+  const selectDate = useCallback((d: Date, t?: string) => {
     setSelectedDate(d);
+    if (t) setTime(t);
     goTo('people');
   }, [goTo]);
 
