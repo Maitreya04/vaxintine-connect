@@ -4,7 +4,6 @@ import LandingStep from '@/components/LandingStep';
 import CalendarStep from '@/components/CalendarStep';
 import PeopleStep from '@/components/PeopleStep';
 import SentStep from '@/components/SentStep';
-import FloatingHearts from '@/components/FloatingHearts';
 
 const Index = () => {
   const {
@@ -14,7 +13,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background relative">
-      <FloatingHearts />
       <div className="relative z-10">
         <AnimatePresence mode="wait">
           {step === 'landing' && (
