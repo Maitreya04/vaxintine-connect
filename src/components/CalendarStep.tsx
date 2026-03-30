@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import heartsImg from '@/assets/hearts-motif.png';
+import { ChevronLeft, ChevronRight, ArrowLeft, Heart } from 'lucide-react';
 
 interface CalendarStepProps {
   onSelect: (date: Date) => void;
+  onBack: () => void;
 }
 
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-const DAY_NAMES = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-const CalendarStep = ({ onSelect }: CalendarStepProps) => {
+const CalendarStep = ({ onSelect, onBack }: CalendarStepProps) => {
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth());
@@ -20,6 +20,9 @@ const CalendarStep = ({ onSelect }: CalendarStepProps) => {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const today = now.getDate();
   const isCurrentMonth = month === now.getMonth() && year === now.getFullYear();
+
+  const totalCells = firstDay + daysInMonth;
+  const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
 
   const prevMonth = () => {
     if (month === 0) { setMonth(11); setYear(y => y - 1); }
@@ -35,7 +38,7 @@ const CalendarStep = ({ onSelect }: CalendarStepProps) => {
 
   const handleDayClick = (day: number) => {
     setSelectedDay(day);
-    setTimeout(() => onSelect(new Date(year, month, day)), 400);
+    setTimeout(() => onSelect(new Date(year, month, day)), 350);
   };
 
   return (
@@ -43,41 +46,27 @@ const CalendarStep = ({ onSelect }: CalendarStepProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col items-center justify-center min-h-screen px-4 py-8"
+      className="flex flex-col min-h-screen px-4 md:px-8 py-6 md:py-10"
     >
-      {/* Title */}
-      <motion.h2
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="font-script text-[3rem] md:text-[5rem] text-primary leading-none mb-2"
-      >
-        Pick a Date
-      </motion.h2>
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="font-body text-muted-foreground text-sm mb-8"
-      >
-        choose the perfect day to care
-      </motion.p>
-
-      {/* Calendar card */}
+      {/* Top bar: back + month nav */}
       <motion.div
-        initial={{ y: 30, opacity: 0, scale: 0.95 }}
-        animate={{ y: 0, opacity: 1, scale: 1 }}
-        transition={{ delay: 0.3, type: 'spring', stiffness: 100 }}
-        className="w-full max-w-sm bg-card/60 backdrop-blur-sm rounded-3xl border border-primary/20 shadow-xl p-6 relative overflow-hidden"
+        initial={{ y: -10, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="flex items-center justify-between mb-6"
       >
-        {/* Decorative hearts in corner */}
-        <img src={heartsImg} alt="" aria-hidden className="absolute -top-4 -right-6 w-24 opacity-15 rotate-12 pointer-events-none" />
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1.5 font-body text-sm text-muted-foreground hover:text-primary transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back
+        </button>
 
-        {/* Month navigation */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-4">
           <button onClick={prevMonth} className="p-2 rounded-full hover:bg-primary/10 transition-colors">
             <ChevronLeft className="w-5 h-5 text-primary" />
           </button>
-          <h3 className="font-body font-semibold text-lg text-foreground tracking-wide">
+          <h3 className="font-body font-semibold text-base md:text-lg text-foreground min-w-[160px] text-center">
             {MONTH_NAMES[month]} {year}
           </h3>
           <button onClick={nextMonth} className="p-2 rounded-full hover:bg-primary/10 transition-colors">
@@ -85,20 +74,54 @@ const CalendarStep = ({ onSelect }: CalendarStepProps) => {
           </button>
         </div>
 
-        {/* Day headers */}
-        <div className="grid grid-cols-7 gap-1 mb-2">
-          {DAY_NAMES.map((d, i) => (
-            <div key={i} className="text-center font-body text-xs font-semibold text-muted-foreground py-1">
+        <div className="w-14" /> {/* spacer for balance */}
+      </motion.div>
+
+      {/* Title */}
+      <motion.h2
+        initial={{ y: 15, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.1 }}
+        className="font-script text-[2.5rem] md:text-[4.5rem] text-primary leading-none text-center mb-1"
+      >
+        Pick a Date
+      </motion.h2>
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="font-body text-muted-foreground text-sm text-center mb-6"
+      >
+        choose the perfect day to care
+      </motion.p>
+
+      {/* Full-width calendar grid */}
+      <motion.div
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="w-full flex-1"
+      >
+        {/* Header row */}
+        <div className="grid grid-cols-7 border-t border-l border-primary/30">
+          {DAY_NAMES.map(d => (
+            <div
+              key={d}
+              className="border-r border-b border-primary/30 px-2 md:px-4 py-2 md:py-3 font-body font-semibold text-muted-foreground text-xs md:text-sm uppercase tracking-wider"
+            >
               {d}
             </div>
           ))}
         </div>
 
-        {/* Day grid */}
-        <div className="grid grid-cols-7 gap-1">
+        {/* Day cells */}
+        <div className="grid grid-cols-7 border-l border-primary/30">
+          {/* Empty cells */}
           {Array.from({ length: firstDay }).map((_, i) => (
-            <div key={`e-${i}`} className="aspect-square" />
+            <div key={`empty-${i}`} className="border-r border-b border-primary/30 aspect-[4/3] md:aspect-[3/2]" />
           ))}
+
+          {/* Days */}
           {Array.from({ length: daysInMonth }).map((_, i) => {
             const day = i + 1;
             const isPast = isCurrentMonth && day < today;
@@ -110,28 +133,44 @@ const CalendarStep = ({ onSelect }: CalendarStepProps) => {
                 key={day}
                 disabled={isPast}
                 onClick={() => handleDayClick(day)}
-                whileHover={!isPast ? { scale: 1.15 } : undefined}
-                whileTap={!isPast ? { scale: 0.9 } : undefined}
+                whileHover={!isPast ? { backgroundColor: 'hsl(350 72% 46% / 0.04)' } : undefined}
                 className={`
-                  aspect-square rounded-full flex items-center justify-center font-body text-sm transition-all relative
-                  ${isPast ? 'text-muted-foreground/30 cursor-not-allowed' : 'cursor-pointer hover:bg-primary/10'}
-                  ${isSelected ? 'bg-primary text-primary-foreground font-bold shadow-lg' : ''}
-                  ${isToday && !isSelected ? 'ring-2 ring-primary/40 font-semibold' : ''}
+                  relative border-r border-b border-primary/30 aspect-[4/3] md:aspect-[3/2] p-2 md:p-3 text-left transition-all
+                  ${isPast ? 'text-muted-foreground/30 cursor-not-allowed' : 'cursor-pointer'}
+                  ${isSelected ? 'bg-primary/10' : ''}
                 `}
               >
-                {day}
+                <span className={`
+                  font-body text-sm md:text-base
+                  ${isSelected ? 'text-primary font-bold' : ''}
+                  ${isToday && !isSelected ? 'font-semibold text-primary' : ''}
+                `}>
+                  {day}
+                </span>
+                {isToday && !isSelected && (
+                  <span className="absolute top-1 right-1 md:top-2 md:right-2 w-1.5 h-1.5 rounded-full bg-primary" />
+                )}
                 {isSelected && (
-                  <motion.span
+                  <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -top-1 -right-1 text-xs"
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
                   >
-                    ♥
-                  </motion.span>
+                    <Heart className="w-6 h-6 md:w-8 md:h-8 text-primary fill-primary/20" />
+                  </motion.div>
                 )}
               </motion.button>
             );
           })}
+
+          {/* Trailing empty cells */}
+          {Array.from({ length: remainingCells }).map((_, i) => (
+            <div key={`trail-${i}`} className="border-r border-b border-primary/30 aspect-[4/3] md:aspect-[3/2] p-2 md:p-3">
+              <span className="font-body text-sm md:text-base text-muted-foreground/20">
+                {i + 1}
+              </span>
+            </div>
+          ))}
         </div>
       </motion.div>
     </motion.div>

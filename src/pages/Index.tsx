@@ -8,7 +8,7 @@ import SentStep from '@/components/SentStep';
 const Index = () => {
   const {
     step, selectedDate, recipients, time,
-    goTo, selectDate, addRecipient, removeRecipient, setTime,
+    goTo, goBack, selectDate, addRecipient, removeRecipient, setTime,
   } = useVaxintine();
 
   return (
@@ -19,7 +19,7 @@ const Index = () => {
             <LandingStep key="landing" onStart={() => goTo('calendar')} />
           )}
           {step === 'calendar' && (
-            <CalendarStep key="calendar" onSelect={selectDate} />
+            <CalendarStep key="calendar" onSelect={selectDate} onBack={goBack} />
           )}
           {step === 'people' && selectedDate && (
             <PeopleStep
@@ -31,6 +31,7 @@ const Index = () => {
               onRemoveRecipient={removeRecipient}
               onTimeChange={setTime}
               onSend={() => goTo('send')}
+              onBack={goBack}
             />
           )}
           {step === 'send' && (

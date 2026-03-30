@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Plus, Heart } from 'lucide-react';
+import { X, Plus, Heart, ArrowLeft, CalendarDays, Clock, Send } from 'lucide-react';
 import { format } from 'date-fns';
-import heartsImg from '@/assets/hearts-motif.png';
 
 interface PeopleStepProps {
   date: Date;
@@ -12,9 +11,10 @@ interface PeopleStepProps {
   onRemoveRecipient: (email: string) => void;
   onTimeChange: (time: string) => void;
   onSend: () => void;
+  onBack: () => void;
 }
 
-const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient, onTimeChange, onSend }: PeopleStepProps) => {
+const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient, onTimeChange, onSend, onBack }: PeopleStepProps) => {
   const [input, setInput] = useState('');
 
   const handleAdd = () => {
@@ -34,10 +34,22 @@ const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient,
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col items-center justify-center min-h-screen px-6 relative"
+      className="flex flex-col items-center min-h-screen px-6 py-6"
     >
-      {/* Decorative hearts */}
-      <img src={heartsImg} alt="" aria-hidden className="absolute top-8 right-4 w-28 opacity-10 rotate-6 pointer-events-none select-none" />
+      {/* Back button */}
+      <motion.div
+        initial={{ x: -10, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        className="self-start mb-8"
+      >
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1.5 font-body text-sm text-muted-foreground hover:text-primary transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back
+        </button>
+      </motion.div>
 
       <motion.h2
         initial={{ y: 20, opacity: 0 }}
@@ -63,11 +75,12 @@ const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient,
       >
         {/* Date & Time chips */}
         <div className="flex flex-wrap gap-2 justify-center">
-          <span className="inline-flex items-center gap-2 bg-primary/8 rounded-full px-5 py-2.5 font-body text-sm text-primary border border-primary/15">
-            📅 {format(date, 'EEEE, MMM d')}
+          <span className="inline-flex items-center gap-2 bg-primary/5 rounded-full px-5 py-2.5 font-body text-sm text-primary border border-primary/15">
+            <CalendarDays className="w-3.5 h-3.5" />
+            {format(date, 'EEEE, MMM d')}
           </span>
-          <span className="inline-flex items-center gap-2 bg-primary/8 rounded-full px-5 py-2.5 font-body text-sm text-primary border border-primary/15">
-            🕐
+          <span className="inline-flex items-center gap-2 bg-primary/5 rounded-full px-5 py-2.5 font-body text-sm text-primary border border-primary/15">
+            <Clock className="w-3.5 h-3.5" />
             <input
               type="text"
               value={time}
@@ -120,7 +133,7 @@ const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient,
           </AnimatePresence>
         </div>
 
-        {/* Decorative hearts animation */}
+        {/* Decorative hearts */}
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -133,7 +146,7 @@ const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient,
               animate={{ y: [0, -6, 0], scale: [1, 1.1, 1] }}
               transition={{ delay: i * 0.2, duration: 2, repeat: Infinity }}
             >
-              <Heart className={`w-6 h-6 text-primary ${i === 1 ? 'fill-primary w-8 h-8' : 'fill-primary/30'}`} />
+              <Heart className={`text-primary ${i === 1 ? 'w-8 h-8 fill-primary' : 'w-6 h-6 fill-primary/30'}`} />
             </motion.div>
           ))}
         </motion.div>
@@ -147,8 +160,9 @@ const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient,
           whileTap={{ scale: 0.98 }}
           onClick={onSend}
           disabled={recipients.length === 0}
-          className="w-full rounded-full bg-primary text-primary-foreground py-4 font-body font-semibold text-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:shadow-none"
+          className="w-full rounded-full bg-primary text-primary-foreground py-4 font-body font-semibold text-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:shadow-none flex items-center justify-center gap-2"
         >
+          <Send className="w-5 h-5" />
           Send Invite {recipients.length > 0 && `(${recipients.length})`}
         </motion.button>
       </motion.div>
