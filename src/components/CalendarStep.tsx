@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import heartsImg from '@/assets/hearts-motif.png';
 
 interface CalendarStepProps {
   onSelect: (date: Date) => void;
 }
 
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const DAY_NAMES = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 const CalendarStep = ({ onSelect }: CalendarStepProps) => {
   const now = new Date();
@@ -20,20 +21,21 @@ const CalendarStep = ({ onSelect }: CalendarStepProps) => {
   const today = now.getDate();
   const isCurrentMonth = month === now.getMonth() && year === now.getFullYear();
 
-  // Get days from next month to fill remaining cells
-  const totalCells = firstDay + daysInMonth;
-  const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+  const prevMonth = () => {
+    if (month === 0) { setMonth(11); setYear(y => y - 1); }
+    else setMonth(m => m - 1);
+    setSelectedDay(null);
+  };
 
-  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setMonth(parseInt(e.target.value));
+  const nextMonth = () => {
+    if (month === 11) { setMonth(0); setYear(y => y + 1); }
+    else setMonth(m => m + 1);
     setSelectedDay(null);
   };
 
   const handleDayClick = (day: number) => {
     setSelectedDay(day);
-    setTimeout(() => {
-      onSelect(new Date(year, month, day));
-    }, 300);
+    setTimeout(() => onSelect(new Date(year, month, day)), 400);
   };
 
   return (
@@ -41,104 +43,95 @@ const CalendarStep = ({ onSelect }: CalendarStepProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col items-center min-h-screen px-4 md:px-8 py-8 md:py-12"
+      className="flex flex-col items-center justify-center min-h-screen px-4 py-8"
     >
+      {/* Title */}
       <motion.h2
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="font-script text-[3.5rem] md:text-[6rem] text-primary leading-none mb-6 md:mb-10"
+        className="font-script text-[3rem] md:text-[5rem] text-primary leading-none mb-2"
       >
         Pick a Date
       </motion.h2>
-
-      {/* Month selector */}
-      <motion.div
+      <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="self-start mb-4 relative"
+        transition={{ delay: 0.2 }}
+        className="font-body text-muted-foreground text-sm mb-8"
       >
-        <select
-          value={month}
-          onChange={handleMonthChange}
-          className="appearance-none bg-transparent border border-primary px-4 py-2 pr-10 font-body text-primary cursor-pointer focus:outline-none"
-        >
-          {MONTH_NAMES.map((name, i) => (
-            <option key={name} value={i}>{name}</option>
-          ))}
-        </select>
-        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary pointer-events-none" />
-      </motion.div>
+        choose the perfect day to care
+      </motion.p>
 
-      {/* Calendar grid */}
+      {/* Calendar card */}
       <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.4 }}
-        className="w-full max-w-5xl"
+        initial={{ y: 30, opacity: 0, scale: 0.95 }}
+        animate={{ y: 0, opacity: 1, scale: 1 }}
+        transition={{ delay: 0.3, type: 'spring', stiffness: 100 }}
+        className="w-full max-w-sm bg-card/60 backdrop-blur-sm rounded-3xl border border-primary/20 shadow-xl p-6 relative overflow-hidden"
       >
-        {/* Header row */}
-        <div className="grid grid-cols-7 border-t border-l border-primary">
-          {DAY_NAMES.map(d => (
-            <div
-              key={d}
-              className="border-r border-b border-primary px-2 md:px-4 py-2 md:py-3 font-body font-semibold text-primary text-sm md:text-base"
-            >
+        {/* Decorative hearts in corner */}
+        <img src={heartsImg} alt="" aria-hidden className="absolute -top-4 -right-6 w-24 opacity-15 rotate-12 pointer-events-none" />
+
+        {/* Month navigation */}
+        <div className="flex items-center justify-between mb-6">
+          <button onClick={prevMonth} className="p-2 rounded-full hover:bg-primary/10 transition-colors">
+            <ChevronLeft className="w-5 h-5 text-primary" />
+          </button>
+          <h3 className="font-body font-semibold text-lg text-foreground tracking-wide">
+            {MONTH_NAMES[month]} {year}
+          </h3>
+          <button onClick={nextMonth} className="p-2 rounded-full hover:bg-primary/10 transition-colors">
+            <ChevronRight className="w-5 h-5 text-primary" />
+          </button>
+        </div>
+
+        {/* Day headers */}
+        <div className="grid grid-cols-7 gap-1 mb-2">
+          {DAY_NAMES.map((d, i) => (
+            <div key={i} className="text-center font-body text-xs font-semibold text-muted-foreground py-1">
               {d}
             </div>
           ))}
         </div>
 
-        {/* Day cells */}
-        <div className="grid grid-cols-7 border-l border-primary">
-          {/* Empty cells before first day */}
+        {/* Day grid */}
+        <div className="grid grid-cols-7 gap-1">
           {Array.from({ length: firstDay }).map((_, i) => (
-            <div key={`empty-${i}`} className="border-r border-b border-primary aspect-[4/3] md:aspect-[3/2]" />
+            <div key={`e-${i}`} className="aspect-square" />
           ))}
-
-          {/* Actual days */}
           {Array.from({ length: daysInMonth }).map((_, i) => {
             const day = i + 1;
             const isPast = isCurrentMonth && day < today;
             const isSelected = selectedDay === day;
+            const isToday = isCurrentMonth && day === today;
 
             return (
               <motion.button
                 key={day}
                 disabled={isPast}
                 onClick={() => handleDayClick(day)}
-                whileHover={!isPast ? { backgroundColor: 'hsl(350 72% 46% / 0.06)' } : undefined}
+                whileHover={!isPast ? { scale: 1.15 } : undefined}
+                whileTap={!isPast ? { scale: 0.9 } : undefined}
                 className={`
-                  relative border-r border-b border-primary aspect-[4/3] md:aspect-[3/2] p-2 md:p-3 text-left transition-colors
-                  ${isPast ? 'text-muted-foreground/40 cursor-not-allowed' : 'cursor-pointer'}
-                  ${isSelected ? 'bg-primary/10' : ''}
+                  aspect-square rounded-full flex items-center justify-center font-body text-sm transition-all relative
+                  ${isPast ? 'text-muted-foreground/30 cursor-not-allowed' : 'cursor-pointer hover:bg-primary/10'}
+                  ${isSelected ? 'bg-primary text-primary-foreground font-bold shadow-lg' : ''}
+                  ${isToday && !isSelected ? 'ring-2 ring-primary/40 font-semibold' : ''}
                 `}
               >
-                <span className={`font-body text-sm md:text-base ${isSelected ? 'text-primary font-bold' : ''}`}>
-                  {day}
-                </span>
+                {day}
                 {isSelected && (
-                  <motion.div
+                  <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl md:text-3xl"
+                    className="absolute -top-1 -right-1 text-xs"
                   >
-                    ❤️
-                  </motion.div>
+                    ♥
+                  </motion.span>
                 )}
               </motion.button>
             );
           })}
-
-          {/* Remaining empty cells */}
-          {Array.from({ length: remainingCells }).map((_, i) => (
-            <div key={`trail-${i}`} className="border-r border-b border-primary aspect-[4/3] md:aspect-[3/2] p-2 md:p-3">
-              <span className="font-body text-sm md:text-base text-muted-foreground/30">
-                {i + 1}
-              </span>
-            </div>
-          ))}
         </div>
       </motion.div>
     </motion.div>
