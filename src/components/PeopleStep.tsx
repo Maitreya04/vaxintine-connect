@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Plus } from 'lucide-react';
+import { X, Plus, Heart } from 'lucide-react';
 import { format } from 'date-fns';
+import heartsImg from '@/assets/hearts-motif.png';
 
 interface PeopleStepProps {
   date: Date;
@@ -25,10 +26,7 @@ const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient,
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleAdd();
-    }
+    if (e.key === 'Enter') { e.preventDefault(); handleAdd(); }
   };
 
   return (
@@ -36,92 +34,107 @@ const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient,
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col items-center justify-center min-h-screen px-6"
+      className="flex flex-col items-center justify-center min-h-screen px-6 relative"
     >
+      {/* Decorative hearts */}
+      <img src={heartsImg} alt="" aria-hidden className="absolute top-8 right-4 w-28 opacity-10 rotate-6 pointer-events-none select-none" />
+
       <motion.h2
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="font-script text-[3rem] md:text-[5rem] text-primary leading-none mb-8"
+        className="font-script text-[2.5rem] md:text-[4rem] text-primary leading-none mb-2"
       >
-        Add People
+        Invite your people
       </motion.h2>
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.15 }}
+        className="font-body text-muted-foreground text-sm mb-8"
+      >
+        who deserves a shot of love?
+      </motion.p>
 
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className="w-full max-w-md space-y-6"
+        className="w-full max-w-md space-y-5"
       >
-        {/* Date & Time display */}
-        <div className="flex flex-wrap gap-3 justify-center">
-          <span className="inline-flex items-center gap-2 border border-primary px-4 py-2 font-body text-sm text-primary">
-            📅 {format(date, 'MMM d, yyyy')}
+        {/* Date & Time chips */}
+        <div className="flex flex-wrap gap-2 justify-center">
+          <span className="inline-flex items-center gap-2 bg-primary/8 rounded-full px-5 py-2.5 font-body text-sm text-primary border border-primary/15">
+            📅 {format(date, 'EEEE, MMM d')}
           </span>
-          <div className="relative">
-            <span className="inline-flex items-center gap-2 border border-primary px-4 py-2 font-body text-sm text-primary">
-              🕐
-              <input
-                type="text"
-                value={time}
-                onChange={(e) => onTimeChange(e.target.value)}
-                className="bg-transparent w-20 focus:outline-none text-primary font-body"
-              />
-            </span>
-          </div>
+          <span className="inline-flex items-center gap-2 bg-primary/8 rounded-full px-5 py-2.5 font-body text-sm text-primary border border-primary/15">
+            🕐
+            <input
+              type="text"
+              value={time}
+              onChange={(e) => onTimeChange(e.target.value)}
+              className="bg-transparent w-20 focus:outline-none text-primary font-body"
+            />
+          </span>
         </div>
 
         {/* Recipient input */}
         <div className="flex gap-2">
           <input
-            type="email"
+            type="text"
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="friend@email.com"
-            className="flex-1 border border-primary bg-transparent px-4 py-3 font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            placeholder="name or email..."
+            className="flex-1 rounded-full border border-primary/25 bg-card/50 backdrop-blur-sm px-5 py-3.5 font-body text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all"
           />
-          <button
+          <motion.button
             onClick={handleAdd}
-            className="border border-primary px-4 py-3 text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:shadow-lg transition-shadow"
           >
             <Plus className="w-5 h-5" />
-          </button>
+          </motion.button>
         </div>
 
         {/* Recipients list */}
-        <AnimatePresence>
-          {recipients.map(r => (
-            <motion.div
-              key={r}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 10 }}
-              className="flex items-center justify-between border border-primary/30 px-4 py-3"
-            >
-              <span className="font-body text-sm text-foreground">👤 {r}</span>
-              <button onClick={() => onRemoveRecipient(r)} className="text-muted-foreground hover:text-primary transition-colors">
-                <X className="w-4 h-4" />
-              </button>
-            </motion.div>
-          ))}
-        </AnimatePresence>
+        <div className="space-y-2">
+          <AnimatePresence>
+            {recipients.map(r => (
+              <motion.div
+                key={r}
+                initial={{ opacity: 0, scale: 0.9, y: -5 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="flex items-center justify-between bg-card/60 backdrop-blur-sm rounded-full border border-primary/15 px-5 py-3 shadow-sm"
+              >
+                <span className="flex items-center gap-2 font-body text-sm text-foreground">
+                  <Heart className="w-3.5 h-3.5 text-primary fill-primary" />
+                  {r}
+                </span>
+                <button onClick={() => onRemoveRecipient(r)} className="text-muted-foreground hover:text-primary transition-colors p-1 rounded-full hover:bg-primary/10">
+                  <X className="w-4 h-4" />
+                </button>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
 
-        {/* Hearts illustration */}
+        {/* Decorative hearts animation */}
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="flex justify-center gap-1 py-4"
+          className="flex justify-center gap-2 py-3"
         >
-          {['❤️', '❤️', '❤️'].map((h, i) => (
-            <motion.span
+          {[0, 1, 2].map(i => (
+            <motion.div
               key={i}
-              className="text-4xl md:text-5xl"
-              animate={{ y: [0, -4, 0] }}
-              transition={{ delay: i * 0.15, duration: 1.5, repeat: Infinity }}
+              animate={{ y: [0, -6, 0], scale: [1, 1.1, 1] }}
+              transition={{ delay: i * 0.2, duration: 2, repeat: Infinity }}
             >
-              {h}
-            </motion.span>
+              <Heart className={`w-6 h-6 text-primary ${i === 1 ? 'fill-primary w-8 h-8' : 'fill-primary/30'}`} />
+            </motion.div>
           ))}
         </motion.div>
 
@@ -130,13 +143,13 @@ const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient,
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          whileHover={{ scale: 1.02 }}
+          whileHover={{ scale: 1.02, boxShadow: '0 8px 30px hsl(350 72% 46% / 0.25)' }}
           whileTap={{ scale: 0.98 }}
           onClick={onSend}
           disabled={recipients.length === 0}
-          className="w-full border border-primary py-4 font-body font-medium text-lg text-primary hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-full rounded-full bg-primary text-primary-foreground py-4 font-body font-semibold text-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:shadow-none"
         >
-          Send
+          Send Invite {recipients.length > 0 && `(${recipients.length})`}
         </motion.button>
       </motion.div>
     </motion.div>
