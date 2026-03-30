@@ -1,65 +1,39 @@
 import { AnimatePresence } from 'framer-motion';
 import { useVaxintine } from '@/hooks/useVaxintine';
 import LandingStep from '@/components/LandingStep';
-import ToneStep from '@/components/ToneStep';
 import CalendarStep from '@/components/CalendarStep';
-import MessageStep from '@/components/MessageStep';
-import IntentStep from '@/components/IntentStep';
-import PreviewStep from '@/components/PreviewStep';
-import ShareStep from '@/components/ShareStep';
-import RecipientStep from '@/components/RecipientStep';
+import PeopleStep from '@/components/PeopleStep';
+import SentStep from '@/components/SentStep';
 
 const Index = () => {
   const {
-    step, tone, selectedDate, message, intent,
-    goTo, selectTone, selectDate, regenerateMessage, selectIntent,
-    setMessage,
+    step, selectedDate, recipients, time,
+    goTo, selectDate, addRecipient, removeRecipient, setTime,
   } = useVaxintine();
 
   return (
     <div className="min-h-screen bg-background">
       <AnimatePresence mode="wait">
         {step === 'landing' && (
-          <LandingStep key="landing" onStart={() => goTo('tone')} />
-        )}
-        {step === 'tone' && (
-          <ToneStep key="tone" onSelect={selectTone} />
+          <LandingStep key="landing" onStart={() => goTo('calendar')} />
         )}
         {step === 'calendar' && (
           <CalendarStep key="calendar" onSelect={selectDate} />
         )}
-        {step === 'message' && tone && selectedDate && (
-          <MessageStep
-            key="message"
-            tone={tone}
+        {step === 'people' && selectedDate && (
+          <PeopleStep
+            key="people"
             date={selectedDate}
-            message={message}
-            onMessageChange={setMessage}
-            onRegenerate={regenerateMessage}
-            onNext={() => goTo('intent')}
+            time={time}
+            recipients={recipients}
+            onAddRecipient={addRecipient}
+            onRemoveRecipient={removeRecipient}
+            onTimeChange={setTime}
+            onSend={() => goTo('send')}
           />
         )}
-        {step === 'intent' && (
-          <IntentStep key="intent" onSelect={selectIntent} />
-        )}
-        {step === 'preview' && selectedDate && (
-          <PreviewStep
-            key="preview"
-            message={message}
-            date={selectedDate}
-            onShare={() => goTo('share')}
-          />
-        )}
-        {step === 'share' && (
-          <ShareStep key="share" onViewRecipient={() => goTo('recipient')} />
-        )}
-        {step === 'recipient' && selectedDate && tone && (
-          <RecipientStep
-            key="recipient"
-            message={message}
-            date={selectedDate}
-            tone={tone}
-          />
+        {step === 'send' && (
+          <SentStep key="send" />
         )}
       </AnimatePresence>
     </div>

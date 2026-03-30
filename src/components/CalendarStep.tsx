@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { getRandomMicrocopy } from '@/lib/vaxintine-data';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ChevronDown } from 'lucide-react';
 
 interface CalendarStepProps {
   onSelect: (date: Date) => void;
@@ -14,110 +13,133 @@ const CalendarStep = ({ onSelect }: CalendarStepProps) => {
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth());
-  const [hoveredDay, setHoveredDay] = useState<number | null>(null);
+  const [selectedDay, setSelectedDay] = useState<number | null>(null);
 
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const today = now.getDate();
   const isCurrentMonth = month === now.getMonth() && year === now.getFullYear();
 
-  const prevMonth = () => {
-    if (month === 0) { setMonth(11); setYear(y => y - 1); }
-    else setMonth(m => m - 1);
-  };
-  const nextMonth = () => {
-    if (month === 11) { setMonth(0); setYear(y => y + 1); }
-    else setMonth(m => m + 1);
+  // Get days from next month to fill remaining cells
+  const totalCells = firstDay + daysInMonth;
+  const remainingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+
+  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setMonth(parseInt(e.target.value));
+    setSelectedDay(null);
   };
 
-  const cells: (number | null)[] = [];
-  for (let i = 0; i < firstDay; i++) cells.push(null);
-  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+  const handleDayClick = (day: number) => {
+    setSelectedDay(day);
+    setTimeout(() => {
+      onSelect(new Date(year, month, day));
+    }, 300);
+  };
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col items-center justify-center min-h-screen px-6"
+      className="flex flex-col items-center min-h-screen px-4 md:px-8 py-8 md:py-12"
     >
       <motion.h2
-        initial={{ y: 15, opacity: 0 }}
+        initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="font-display text-3xl md:text-4xl font-semibold mb-2"
+        transition={{ duration: 0.8 }}
+        className="font-script text-[3.5rem] md:text-[6rem] text-primary leading-none mb-6 md:mb-10"
       >
-        Pick your day
+        Pick a Date
       </motion.h2>
-      <motion.p
-        initial={{ y: 10, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.1 }}
-        className="font-body text-muted-foreground mb-8"
-      >
-        When should the caring happen?
-      </motion.p>
 
+      {/* Month selector */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="self-start mb-4 relative"
+      >
+        <select
+          value={month}
+          onChange={handleMonthChange}
+          className="appearance-none bg-transparent border border-primary px-4 py-2 pr-10 font-body text-primary cursor-pointer focus:outline-none"
+        >
+          {MONTH_NAMES.map((name, i) => (
+            <option key={name} value={i}>{name}</option>
+          ))}
+        </select>
+        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary pointer-events-none" />
+      </motion.div>
+
+      {/* Calendar grid */}
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="w-full max-w-sm bg-card rounded-2xl border border-border p-5"
+        transition={{ delay: 0.4 }}
+        className="w-full max-w-5xl"
       >
-        <div className="flex items-center justify-between mb-4">
-          <button onClick={prevMonth} className="p-1 rounded-lg hover:bg-muted transition-colors">
-            <ChevronLeft className="w-5 h-5 text-muted-foreground" />
-          </button>
-          <span className="font-display text-lg font-medium">
-            {MONTH_NAMES[month]} {year}
-          </span>
-          <button onClick={nextMonth} className="p-1 rounded-lg hover:bg-muted transition-colors">
-            <ChevronRight className="w-5 h-5 text-muted-foreground" />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-7 gap-1 mb-2">
+        {/* Header row */}
+        <div className="grid grid-cols-7 border-t border-l border-primary">
           {DAY_NAMES.map(d => (
-            <div key={d} className="text-center text-xs font-body text-muted-foreground py-1">{d}</div>
+            <div
+              key={d}
+              className="border-r border-b border-primary px-2 md:px-4 py-2 md:py-3 font-body font-semibold text-primary text-sm md:text-base"
+            >
+              {d}
+            </div>
           ))}
         </div>
 
-        <div className="grid grid-cols-7 gap-1 relative">
-          {cells.map((day, i) => {
-            if (day === null) return <div key={`e-${i}`} />;
+        {/* Day cells */}
+        <div className="grid grid-cols-7 border-l border-primary">
+          {/* Empty cells before first day */}
+          {Array.from({ length: firstDay }).map((_, i) => (
+            <div key={`empty-${i}`} className="border-r border-b border-primary aspect-[4/3] md:aspect-[3/2]" />
+          ))}
+
+          {/* Actual days */}
+          {Array.from({ length: daysInMonth }).map((_, i) => {
+            const day = i + 1;
             const isPast = isCurrentMonth && day < today;
+            const isSelected = selectedDay === day;
+
             return (
               <motion.button
                 key={day}
                 disabled={isPast}
-                whileHover={!isPast ? { scale: 1.15 } : undefined}
-                whileTap={!isPast ? { scale: 0.9 } : undefined}
-                onMouseEnter={() => !isPast && setHoveredDay(day)}
-                onMouseLeave={() => setHoveredDay(null)}
-                onClick={() => onSelect(new Date(year, month, day))}
+                onClick={() => handleDayClick(day)}
+                whileHover={!isPast ? { backgroundColor: 'hsl(350 72% 46% / 0.06)' } : undefined}
                 className={`
-                  relative aspect-square flex items-center justify-center rounded-lg font-body text-sm transition-all
-                  ${isPast ? 'text-muted-foreground/40 cursor-not-allowed' : 'cursor-pointer hover:bg-primary/10 hover:glow-rose-sm'}
-                  ${day === 14 ? 'text-primary font-semibold' : ''}
+                  relative border-r border-b border-primary aspect-[4/3] md:aspect-[3/2] p-2 md:p-3 text-left transition-colors
+                  ${isPast ? 'text-muted-foreground/40 cursor-not-allowed' : 'cursor-pointer'}
+                  ${isSelected ? 'bg-primary/10' : ''}
                 `}
               >
-                {day}
+                <span className={`font-body text-sm md:text-base ${isSelected ? 'text-primary font-bold' : ''}`}>
+                  {day}
+                </span>
+                {isSelected && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl md:text-3xl"
+                  >
+                    ❤️
+                  </motion.div>
+                )}
               </motion.button>
             );
           })}
-        </div>
 
-        <AnimatePresence>
-          {hoveredDay && (
-            <motion.div
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 5 }}
-              className="mt-4 text-center font-body text-sm text-primary italic"
-            >
-              ✨ {getRandomMicrocopy(hoveredDay)}
-            </motion.div>
-          )}
-        </AnimatePresence>
+          {/* Remaining empty cells */}
+          {Array.from({ length: remainingCells }).map((_, i) => (
+            <div key={`trail-${i}`} className="border-r border-b border-primary aspect-[4/3] md:aspect-[3/2] p-2 md:p-3">
+              <span className="font-body text-sm md:text-base text-muted-foreground/30">
+                {i + 1}
+              </span>
+            </div>
+          ))}
+        </div>
       </motion.div>
     </motion.div>
   );

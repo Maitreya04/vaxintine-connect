@@ -13,54 +13,38 @@ const LandingStep = ({ onStart }: LandingStepProps) => {
       className="flex flex-col items-center justify-center min-h-screen px-6 text-center"
     >
       <motion.div
-        initial={{ y: 20, opacity: 0 }}
+        initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.8 }}
-        className="mb-2"
+        transition={{ delay: 0.2, duration: 1 }}
+        className="relative"
       >
-        <span className="text-6xl">💉</span>
+        <h1 className="font-script text-[4rem] md:text-[7rem] leading-none text-primary select-none">
+          Will you be my
+        </h1>
+        <h1 className="font-script text-[5rem] md:text-[9rem] leading-none text-primary -mt-4 md:-mt-8 select-none">
+          Vaxentine?
+        </h1>
+        {/* Shadow text layer */}
+        <h1
+          className="font-script text-[5rem] md:text-[9rem] leading-none text-blush absolute -mt-4 md:-mt-8 select-none pointer-events-none"
+          style={{ top: '50%', left: '50%', transform: 'translate(-48%, -46%)', zIndex: -1 }}
+          aria-hidden
+        >
+          Vaxentine?
+        </h1>
       </motion.div>
 
-      <motion.h1
+      <motion.button
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.4, duration: 0.8 }}
-        className="font-display text-5xl md:text-7xl font-semibold tracking-tight text-gradient-rose mb-4"
-      >
-        Will you be my
-        <br />
-        <span className="italic">Vaxintine?</span>
-      </motion.h1>
-
-      <motion.p
-        initial={{ y: 10, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.7, duration: 0.6 }}
-        className="font-body text-lg text-muted-foreground mb-10 max-w-md"
-      >
-        Pick a day to care. Send an invite. Make immunity intimate.
-      </motion.p>
-
-      <motion.button
-        initial={{ y: 10, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 1, duration: 0.5 }}
+        transition={{ delay: 0.8, duration: 0.5 }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.97 }}
         onClick={onStart}
-        className="px-10 py-4 rounded-full bg-primary text-primary-foreground font-body font-medium text-lg glow-rose transition-shadow hover:glow-rose-sm"
+        className="mt-12 px-12 py-4 border border-primary text-primary font-body font-medium text-lg hover:bg-primary hover:text-primary-foreground transition-all"
       >
-        Start Invite
+        Pick a Date
       </motion.button>
-
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="mt-8 text-sm text-muted-foreground font-body italic"
-      >
-        Not a medical app. Just a moment of care.
-      </motion.p>
     </motion.div>
   );
 };
