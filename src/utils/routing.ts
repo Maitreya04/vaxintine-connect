@@ -12,7 +12,8 @@ export function generateRoutingLink(recipient: string, date: Date, time: string)
   const type = categorizeRecipient(recipient);
   const formattedDate = format(date, 'MMM d, yyyy');
   
-  const text = `Hey! I've scheduled a Vaxintine for us on ${formattedDate} at ${time}. Can't wait! ❤️\n\n(Sent via Vaxintine Connect)`;
+  const APP_URL = 'https://vax-sweetheart-invites.lovable.app';
+  const text = `Hey! I've scheduled a Vaxintine for us on ${formattedDate} at ${time}. Can't wait! ❤️\n\n${APP_URL}`;
   const subject = "You've been invited to a Vaxintine! 💌";
 
   if (type === 'email') {
@@ -34,7 +35,8 @@ export function generateBatchRoutingLinks(recipients: string[], date: Date, time
   const phones = recipients.filter(r => categorizeRecipient(r) === 'phone').map(p => p.replace(/[^\d+]/g, ''));
 
   const formattedDate = format(date, 'MMM d, yyyy');
-  const text = `Hey! I've scheduled a Vaxintine for us on ${formattedDate} at ${time}. Can't wait! ❤️\n\n(Sent via Vaxintine Connect)`;
+  const APP_URL = 'https://vax-sweetheart-invites.lovable.app';
+  const text = `Hey! I've scheduled a Vaxintine for us on ${formattedDate} at ${time}. Can't wait! ❤️\n\n${APP_URL}`;
   const subject = "You've been invited to a Vaxintine! 💌";
 
   let emailLink = null;
