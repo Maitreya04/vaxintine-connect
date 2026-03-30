@@ -34,7 +34,7 @@ const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient,
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col items-center min-h-screen px-4 md:px-6 py-6 pb-32 md:pb-12"
+      className="flex flex-col items-center min-h-screen px-4 md:px-6 py-6 pb-8 md:pb-12"
     >
       {/* Back button */}
       <motion.div
@@ -44,7 +44,7 @@ const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient,
       >
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 font-body text-sm text-foreground/80 hover:text-primary transition-colors border border-primary/20 hover:border-primary/40 px-3 py-1.5 md:px-4 md:py-2 rounded-md bg-background shadow-sm"
+          className="flex items-center gap-1.5 font-body text-sm text-primary transition-colors border border-primary/20 hover:bg-primary/5 px-3 py-1.5 md:px-4 md:py-2 bg-transparent"
         >
           <ArrowLeft className="w-4 h-4" />
           Back
@@ -93,15 +93,15 @@ const PeopleStep = ({ date, time, recipients, onAddRecipient, onRemoveRecipient,
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="name or email..."
-            className="flex-1 rounded-xl border border-primary/20 bg-background/50 backdrop-blur-sm px-4 py-3 font-body text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all shadow-sm"
+            className="flex-1 rounded-xl border border-primary/20 bg-background/50 backdrop-blur-sm px-4 py-3 font-body text-base text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all shadow-sm"
           />
           <motion.button
             onClick={handleAdd}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="w-[52px] h-[52px] rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:shadow-lg transition-all border border-primary/20"
+            className="h-[52px] px-6 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:shadow-lg transition-all border border-primary/20 font-body font-medium"
           >
-            <Plus className="w-5 h-5" />
+            Add
           </motion.button>
         </div>
 

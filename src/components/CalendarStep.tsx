@@ -12,6 +12,8 @@ const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const CalendarStep = ({ onSelect, onBack }: CalendarStepProps) => {
   const now = new Date();
+  const todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth());
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
@@ -52,7 +54,7 @@ const CalendarStep = ({ onSelect, onBack }: CalendarStepProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col h-[100dvh] overflow-hidden px-4 md:px-8 pt-4 md:pt-6 pb-6 md:pb-8"
+      className="flex flex-col min-h-[100dvh] max-w-md mx-auto px-4 md:px-8 pt-4 md:pt-6 pb-6 md:pb-8"
     >
       {/* Top bar: back */}
       <motion.div
@@ -62,7 +64,7 @@ const CalendarStep = ({ onSelect, onBack }: CalendarStepProps) => {
       >
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 font-body text-sm text-foreground/80 hover:text-primary transition-colors border border-primary/20 hover:border-primary/40 px-3 py-1.5 md:px-4 md:py-2 rounded-md bg-background shadow-sm"
+          className="flex items-center gap-1.5 font-body text-sm text-primary transition-colors border border-primary/20 hover:bg-primary/5 px-3 py-1.5 md:px-4 md:py-2 bg-transparent"
         >
           <ArrowLeft className="w-4 h-4" />
           Back
@@ -129,7 +131,8 @@ const CalendarStep = ({ onSelect, onBack }: CalendarStepProps) => {
           {/* Days */}
           {Array.from({ length: daysInMonth }).map((_, i) => {
             const day = i + 1;
-            const isPast = isCurrentMonth && day < today;
+            const currentDayDate = new Date(year, month, day);
+            const isPast = currentDayDate < todayDate;
             const isSelected = selectedDay === day;
             const isToday = isCurrentMonth && day === today;
 
@@ -140,29 +143,31 @@ const CalendarStep = ({ onSelect, onBack }: CalendarStepProps) => {
                 onClick={() => handleDayClick(day)}
                 whileHover={!isPast ? { backgroundColor: 'hsl(350 72% 46% / 0.04)' } : undefined}
                 className={`
-                  relative border-r border-b border-primary/30 p-1 md:p-2 flex flex-col items-center justify-center transition-all
-                  ${isPast ? 'text-muted-foreground/30 cursor-not-allowed' : 'cursor-pointer'}
-                  ${isSelected ? 'bg-primary/10' : ''}
+                  relative border-r border-b border-primary/30 p-1 md:p-2 flex flex-col items-center justify-center transition-colors
+                  ${isPast ? 'text-muted-foreground/30 bg-muted/20 cursor-not-allowed' : 'cursor-pointer'}
+                  ${isSelected ? 'bg-primary/5' : ''}
                 `}
               >
-                <span className={`
-                  font-body text-sm md:text-base relative z-10
-                  ${isSelected ? 'text-primary font-bold -translate-y-[2px] md:-translate-y-[3px]' : ''}
-                  ${isToday && !isSelected ? 'font-semibold text-primary' : ''}
-                `}>
-                  {day}
-                </span>
+                <div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10">
+                  <span className={`
+                    font-body text-sm md:text-base relative z-10
+                    ${isSelected ? 'text-primary font-bold' : ''}
+                    ${isToday && !isSelected ? 'font-semibold text-primary' : ''}
+                  `}>
+                    {day}
+                  </span>
+                  {isSelected && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                    >
+                      <Heart className="absolute w-12 h-12 md:w-14 md:h-14 text-primary" strokeWidth={1.2} fill="transparent" />
+                    </motion.div>
+                  )}
+                </div>
                 {isToday && !isSelected && (
-                  <span className="absolute top-1 right-1 md:top-2 md:right-2 w-1.5 h-1.5 rounded-full bg-primary" />
-                )}
-                {isSelected && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                  >
-                    <Heart className="w-10 h-10 md:w-12 md:h-12 text-primary fill-primary/15" strokeWidth={1.2} />
-                  </motion.div>
+                  <span className="absolute top-2 right-2 md:top-3 md:right-3 w-1.5 h-1.5 rounded-full bg-primary" />
                 )}
               </motion.button>
             );
@@ -170,7 +175,7 @@ const CalendarStep = ({ onSelect, onBack }: CalendarStepProps) => {
 
           {/* Trailing empty cells */}
           {Array.from({ length: remainingCells }).map((_, i) => (
-            <div key={`trail-${i}`} className="border-r border-b border-primary/30 p-1 md:p-2 flex flex-col items-center justify-center">
+            <div key={`trail-${i}`} className="border-r border-b border-primary/30 p-1 md:p-2 flex flex-col items-center justify-start pt-2 md:pt-3">
               <span className="font-body text-sm md:text-base text-muted-foreground/20">
                 {i + 1}
               </span>

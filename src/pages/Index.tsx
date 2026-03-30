@@ -34,8 +34,8 @@ const Index = () => {
               onBack={goBack}
             />
           )}
-          {step === 'send' && (
-            <SentStep key="send" />
+          {step === 'send' && selectedDate && (
+            <SentStep key="send" recipients={recipients} date={selectedDate} time={time} />
           )}
         </AnimatePresence>
       </div>

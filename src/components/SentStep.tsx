@@ -1,73 +1,137 @@
 import { motion } from 'framer-motion';
-import { Heart } from 'lucide-react';
-import heartsImg from '@/assets/hearts-motif.png';
+import { Mail, MessageCircle, RefreshCw } from 'lucide-react';
+import HeartsLockup from './HeartsLockup';
+import { generateRoutingLink, categorizeRecipient, generateBatchRoutingLinks } from '../utils/routing';
 
-const SentStep = () => {
+interface SentStepProps {
+  recipients: string[];
+  date: Date;
+  time: string;
+}
+
+const SentStep = ({ recipients, date, time }: SentStepProps) => {
+  // Cap at 3 hearts for visual aesthetics so it doesn't bleed off screen awkwardly
+  const heartCount = Math.min(3, Math.max(1, recipients.length));
+  
+  // Calculate batch links
+  const { emailLink, smsLink, emailCount, smsCount } = generateBatchRoutingLinks(recipients, date, time);
+
+  // Calculate width so each heart gets roughly 90px-120px depending on count
+  // For 1 heart: ~260px, For 5 hearts: ~500px, etc.
+  const lockupWidth = 140 + heartCount * 90;
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col items-center justify-center min-h-screen px-6 text-center relative overflow-hidden"
+      className="flex flex-col items-center justify-center min-h-screen px-6 py-12 text-center relative overflow-hidden"
     >
-      {/* Background hearts */}
-      <img src={heartsImg} alt="" aria-hidden className="absolute top-12 left-1/2 -translate-x-1/2 w-64 opacity-10 pointer-events-none select-none" />
-
-      {/* Animated heart burst */}
-      <div className="relative mb-6">
-        {[0, 1, 2, 3, 4].map(i => (
-          <motion.div
-            key={i}
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: [0, 1.5, 0], opacity: [0, 0.6, 0] }}
-            transition={{ delay: 0.3 + i * 0.15, duration: 1.2 }}
-            className="absolute top-1/2 left-1/2"
-            style={{
-              transform: `translate(-50%, -50%) rotate(${i * 72}deg) translateY(-30px)`,
-            }}
-          >
-            <Heart className="w-5 h-5 text-primary fill-primary" />
-          </motion.div>
-        ))}
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
-        >
-          <Heart className="w-16 h-16 text-primary fill-primary" />
-        </motion.div>
-      </div>
-
-      <motion.h2
-        initial={{ y: 20, opacity: 0 }}
+      {/* Hearts lockup — responsive scaling */}
+      <motion.div
+        initial={{ y: -24, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="font-script text-[3.5rem] md:text-[6rem] text-primary leading-none mb-3"
+        transition={{ duration: 0.55, ease: 'easeOut' }}
+        className="w-full max-w-[400px] mb-8 flex justify-center items-center"
       >
-        Sent!
-      </motion.h2>
+        <div style={{ width: lockupWidth, maxWidth: '100%' }}>
+          <HeartsLockup count={heartCount} label={"Ready!"} />
+        </div>
+      </motion.div>
 
+      {/* Sub-copy */}
       <motion.p
         initial={{ y: 10, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.7 }}
-        className="font-body text-muted-foreground text-base md:text-lg max-w-xs"
+        transition={{ delay: heartCount * 0.08 + 0.55 }}
+        className="font-body text-muted-foreground text-base md:text-lg max-w-xs mb-8"
       >
-        Your Vaxentine invite is on its way.
+        Tap below to send out your invites.
         <br />
-        <span className="italic">Because caring is contagious.</span>
+        <span className="italic">Love is Contagious.</span>
       </motion.p>
 
+      {/* Action List */}
+      <motion.div
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: heartCount * 0.08 + 0.7 }}
+        className="w-full max-w-sm space-y-3"
+      >
+        {smsLink && (
+          <motion.a
+            href={smsLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full flex items-center justify-center gap-2 p-4 rounded-xl border border-primary bg-primary text-primary-foreground shadow-sm hover:shadow-md transition-all font-medium font-body mb-2"
+          >
+            <MessageCircle className="w-5 h-5" />
+            Send to all {smsCount} via Text
+          </motion.a>
+        )}
+        
+        {emailLink && (
+          <motion.a
+            href={emailLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full flex items-center justify-center gap-2 p-4 rounded-xl border border-primary bg-primary text-primary-foreground shadow-sm hover:shadow-md transition-all font-medium font-body mb-2"
+          >
+            <Mail className="w-5 h-5" />
+            Send to all {emailCount} via Email
+          </motion.a>
+        )}
+
+        {(smsLink || emailLink) && (
+          <div className="py-3 flex items-center justify-center opacity-70">
+            <div className="h-px bg-primary/20 flex-1"></div>
+            <span className="px-3 text-muted-foreground text-xs font-body tracking-wider uppercase">Send Individually</span>
+            <div className="h-px bg-primary/20 flex-1"></div>
+          </div>
+        )}
+
+        {recipients.map((recipient, i) => {
+          const type = categorizeRecipient(recipient);
+          const link = generateRoutingLink(recipient, date, time);
+          const isEmail = type === 'email';
+
+          return (
+            <motion.a
+              key={recipient + i}
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full flex items-center justify-between p-4 rounded-xl border border-primary/20 bg-background shadow-sm hover:border-primary/50 transition-colors group"
+            >
+              <span className="font-body text-foreground truncate mr-4">
+                {recipient}
+              </span>
+              <span className="flex items-center justify-center shrink-0 w-10 h-10 rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                {isEmail ? <Mail className="w-5 h-5" /> : <MessageCircle className="w-5 h-5" />}
+              </span>
+            </motion.a>
+          );
+        })}
+      </motion.div>
+
+      {/* Send another */}
       <motion.button
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.2 }}
+        transition={{ delay: heartCount * 0.08 + 1.1 }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.97 }}
         onClick={() => window.location.reload()}
-        className="mt-10 px-10 py-3.5 rounded-full border-2 border-primary text-primary font-body font-medium hover:bg-primary hover:text-primary-foreground transition-all"
+        className="mt-10 flex items-center gap-2 px-8 py-3 rounded-full border border-primary/30 text-primary font-body text-sm font-medium hover:bg-primary/5 transition-all"
       >
-        Send another
+        <RefreshCw className="w-4 h-4" />
+        Start over
       </motion.button>
     </motion.div>
   );

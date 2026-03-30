@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { Syringe } from 'lucide-react';
 import lockupImg from '@/assets/lockup-shadow.png';
 import heartsImg from '@/assets/hearts-motif.png';
 
@@ -36,15 +35,14 @@ const LandingStep = ({ onStart }: LandingStepProps) => {
         className="w-[85vw] max-w-xl md:max-w-2xl select-none"
       />
 
-      {/* Subtitle */}
+        {/* Subtitle */}
       <motion.p
         initial={{ y: 10, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 1, duration: 0.6 }}
-        className="font-body text-muted-foreground text-base md:text-lg mt-6 tracking-wide flex items-center gap-2"
+        className="font-body text-muted-foreground text-base md:text-lg mt-4 tracking-wide"
       >
-        because caring is contagious
-        <Syringe className="w-4 h-4 text-primary" />
+        Love is Contagious.
       </motion.p>
 
       {/* CTA button */}
@@ -52,10 +50,10 @@ const LandingStep = ({ onStart }: LandingStepProps) => {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 1.3, duration: 0.5 }}
-        whileHover={{ scale: 1.05, boxShadow: '0 8px 30px hsl(350 72% 46% / 0.25)' }}
+        whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.97 }}
         onClick={onStart}
-        className="mt-10 px-14 py-4 rounded-xl border border-primary/20 bg-primary text-primary-foreground font-body font-semibold text-lg shadow-lg hover:shadow-xl transition-all"
+        className="mt-10 px-14 py-4 rounded-xl border border-primary/20 bg-primary text-primary-foreground font-body font-semibold text-lg shadow-lg transition-colors"
       >
         Pick a Date
       </motion.button>
