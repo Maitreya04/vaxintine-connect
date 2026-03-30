@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Syringe } from 'lucide-react';
 import lockupImg from '@/assets/lockup-shadow.png';
 import heartsImg from '@/assets/hearts-motif.png';
 
@@ -40,9 +41,10 @@ const LandingStep = ({ onStart }: LandingStepProps) => {
         initial={{ y: 10, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 1, duration: 0.6 }}
-        className="font-body text-muted-foreground text-base md:text-lg mt-6 tracking-wide"
+        className="font-body text-muted-foreground text-base md:text-lg mt-6 tracking-wide flex items-center gap-2"
       >
-        because caring is contagious 💉
+        because caring is contagious
+        <Syringe className="w-4 h-4 text-primary" />
       </motion.p>
 
       {/* CTA button */}
