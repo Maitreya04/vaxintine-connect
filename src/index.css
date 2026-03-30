@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&family=DM+Sans:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,39 +6,39 @@
 
 @layer base {
   :root {
-    --background: 36 33% 96%;
-    --foreground: 20 10% 15%;
+    --background: 18 50% 96%;
+    --foreground: 350 65% 30%;
 
-    --card: 36 30% 94%;
-    --card-foreground: 20 10% 15%;
+    --card: 18 45% 94%;
+    --card-foreground: 350 65% 30%;
 
-    --popover: 36 33% 96%;
-    --popover-foreground: 20 10% 15%;
+    --popover: 18 50% 96%;
+    --popover-foreground: 350 65% 30%;
 
-    --primary: 350 65% 52%;
-    --primary-foreground: 36 33% 96%;
+    --primary: 350 72% 46%;
+    --primary-foreground: 18 50% 96%;
 
     --secondary: 350 40% 90%;
     --secondary-foreground: 350 65% 35%;
 
-    --muted: 30 20% 90%;
-    --muted-foreground: 20 8% 50%;
+    --muted: 18 25% 90%;
+    --muted-foreground: 350 20% 50%;
 
-    --accent: 350 30% 85%;
+    --accent: 350 50% 88%;
     --accent-foreground: 350 65% 35%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 30 20% 85%;
-    --input: 30 20% 85%;
-    --ring: 350 65% 52%;
+    --border: 350 50% 65%;
+    --input: 350 30% 75%;
+    --ring: 350 72% 46%;
 
-    --radius: 0.75rem;
+    --radius: 0rem;
 
     --rose-glow: 350 80% 60%;
-    --cream-warm: 36 40% 93%;
-    --blush: 350 45% 88%;
+    --cream-warm: 18 50% 93%;
+    --blush: 350 60% 85%;
     --clinical: 200 15% 70%;
 
     --sidebar-background: 0 0% 98%;
@@ -62,25 +62,17 @@
   }
 
   h1, h2, h3, h4 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Pinyon Script', cursive;
   }
 }
 
 @layer utilities {
-  .font-display {
-    font-family: 'Playfair Display', serif;
+  .font-script {
+    font-family: 'Pinyon Script', cursive;
   }
 
   .font-body {
     font-family: 'DM Sans', sans-serif;
-  }
-
-  .glow-rose {
-    box-shadow: 0 0 20px hsl(var(--rose-glow) / 0.3);
-  }
-
-  .glow-rose-sm {
-    box-shadow: 0 0 10px hsl(var(--rose-glow) / 0.2);
   }
 
   .text-gradient-rose {

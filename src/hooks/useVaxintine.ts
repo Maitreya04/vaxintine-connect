@@ -1,47 +1,30 @@
 import { useState, useCallback } from 'react';
-import { Tone, Intent, generateMessage } from '@/lib/vaxintine-data';
-import { format } from 'date-fns';
 
-export type Step = 'landing' | 'tone' | 'calendar' | 'message' | 'intent' | 'preview' | 'share' | 'recipient';
+export type Step = 'landing' | 'calendar' | 'people' | 'send';
 
 export function useVaxintine() {
   const [step, setStep] = useState<Step>('landing');
-  const [tone, setTone] = useState<Tone | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [message, setMessage] = useState('');
-  const [intent, setIntent] = useState<Intent | null>(null);
+  const [recipients, setRecipients] = useState<string[]>([]);
+  const [time, setTime] = useState('2:00 pm');
 
   const goTo = useCallback((s: Step) => setStep(s), []);
 
-  const selectTone = useCallback((t: Tone) => {
-    setTone(t);
-    goTo('calendar');
-  }, [goTo]);
-
   const selectDate = useCallback((d: Date) => {
     setSelectedDate(d);
-    goTo('message');
+    goTo('people');
   }, [goTo]);
 
-  const regenerateMessage = useCallback(() => {
-    if (tone && selectedDate) {
-      const dateStr = format(selectedDate, 'MMMM d');
-      setMessage(generateMessage(tone, intent || 'care', dateStr));
-    }
-  }, [tone, selectedDate, intent]);
+  const addRecipient = useCallback((email: string) => {
+    setRecipients(prev => [...prev, email]);
+  }, []);
 
-  const selectIntent = useCallback((i: Intent) => {
-    setIntent(i);
-    if (tone && selectedDate) {
-      const dateStr = format(selectedDate, 'MMMM d');
-      setMessage(generateMessage(tone, i, dateStr));
-    }
-    goTo('preview');
-  }, [tone, selectedDate, goTo]);
+  const removeRecipient = useCallback((email: string) => {
+    setRecipients(prev => prev.filter(r => r !== email));
+  }, []);
 
   return {
-    step, tone, selectedDate, message, intent,
-    goTo, selectTone, selectDate, regenerateMessage, selectIntent,
-    setMessage,
+    step, selectedDate, recipients, time,
+    goTo, selectDate, addRecipient, removeRecipient, setTime,
   };
 }
