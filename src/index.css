@@ -6,49 +6,56 @@
 
 @layer base {
   :root {
-    --background: 18 50% 96%;
-    --foreground: 350 65% 30%;
+    /* ── Blue background — brighter sky blue matching brand billboard ── */
+    --background: 200 68% 60%;
+    --foreground: 0 0% 100%;
 
-    --card: 18 45% 94%;
-    --card-foreground: 350 65% 30%;
+    /* Slightly deeper blue for card/surface lift */
+    --card: 200 68% 54%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 18 50% 96%;
-    --popover-foreground: 350 65% 30%;
+    --popover: 200 68% 54%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 350 72% 46%;
-    --primary-foreground: 18 50% 96%;
+    /* Primary red — exact #E11E28 brand red */
+    --primary: 357 76% 50%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 350 40% 90%;
-    --secondary-foreground: 350 65% 35%;
+    --secondary: 200 50% 68%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 18 25% 90%;
-    --muted-foreground: 350 20% 50%;
+    /* Muted = slightly darker blue surface */
+    --muted: 200 55% 52%;
+    /* Muted foreground — soft pink from brand image (the "WILL YOU BE MY" text) */
+    --muted-foreground: 348 65% 86%;
 
-    --accent: 350 50% 88%;
-    --accent-foreground: 350 65% 35%;
+    /* Accent pink — matches the blush pink from the brand billboard */
+    --accent: 348 65% 82%;
+    --accent-foreground: 357 76% 35%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 350 50% 65%;
-    --input: 350 30% 75%;
-    --ring: 350 72% 46%;
+    /* Borders: lighter blue so lines read on blue bg */
+    --border: 200 50% 72%;
+    --input: 200 45% 68%;
+    --ring: 357 76% 50%;
 
     --radius: 0rem;
 
-    --rose-glow: 350 80% 60%;
-    --cream-warm: 18 50% 93%;
-    --blush: 350 60% 85%;
-    --clinical: 200 15% 70%;
+    --rose-glow: 357 80% 60%;
+    --cream-warm: 200 50% 72%;
+    --blush: 348 65% 82%;
+    --clinical: 200 30% 75%;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 200 68% 54%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 357 76% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 200 50% 68%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 200 50% 68%;
+    --sidebar-ring: 357 76% 50%;
   }
 }
 

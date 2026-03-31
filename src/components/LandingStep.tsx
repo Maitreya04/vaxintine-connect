@@ -40,9 +40,9 @@ const LandingStep = ({ onStart }: LandingStepProps) => {
         initial={{ y: 10, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 1, duration: 0.6 }}
-        className="font-body text-muted-foreground text-base md:text-lg mt-4 tracking-wide"
+        className="font-body text-foreground/80 text-base md:text-lg mt-4 tracking-wide"
       >
-        Love is Contagious.
+        Care is Contagious.
       </motion.p>
 
       {/* CTA button */}

@@ -96,7 +96,7 @@ const HeartsLockup = ({ count = 1, label = 'Sent!', className = '' }: HeartsLock
           width="8"
           height="8"
         >
-          <rect width="8" height="8" fill="#c8202a" />
+          <rect width="8" height="8" fill="#E11E28" />
           <circle cx="4" cy="4" r="1" fill="rgba(255,255,255,0.22)" />
         </pattern>
 
@@ -119,7 +119,7 @@ const HeartsLockup = ({ count = 1, label = 'Sent!', className = '' }: HeartsLock
             d={HEART}
             transform={`translate(${ox}, 0)`}
             fill={`url(#${DOT_PATTERN_ID})`}
-            stroke="#b01820"
+            stroke="#C01A22"
             strokeWidth="1.5"
           />
         </motion.g>

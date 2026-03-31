@@ -41,7 +41,7 @@ const RecipientStep = ({ message, date, tone }: RecipientStepProps) => {
             <span className="text-5xl mb-4">💉</span>
             <h2 className="font-display text-3xl md:text-4xl font-semibold mb-2">
               You've been invited to a{' '}
-              <span className="text-gradient-rose italic">Vaxintine</span>
+              <span className="text-foreground italic">Vaxintine</span>
             </h2>
             <p className="font-display text-lg italic text-foreground/80 mt-4 max-w-md">
               "{message}"
@@ -128,7 +128,7 @@ const RecipientStep = ({ message, date, tone }: RecipientStepProps) => {
             >
               🎉
             </motion.span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-gradient-rose mb-3">
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">
               You just prevented something.
             </h2>
             <p className="font-body text-muted-foreground max-w-sm">

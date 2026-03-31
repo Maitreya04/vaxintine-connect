@@ -34,7 +34,7 @@ const PreviewStep = ({ message, date, onShare }: PreviewStepProps) => {
           <h3 className="font-display text-xl font-semibold text-foreground">
             You've been invited to a
           </h3>
-          <h3 className="font-display text-2xl font-bold text-gradient-rose italic">
+          <h3 className="font-display text-2xl font-bold text-foreground italic">
             Vaxintine
           </h3>
         </div>

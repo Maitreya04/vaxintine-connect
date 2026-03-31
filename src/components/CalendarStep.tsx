@@ -64,7 +64,7 @@ const CalendarStep = ({ onSelect, onBack }: CalendarStepProps) => {
       >
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 font-body text-sm text-primary transition-colors border border-primary/20 hover:bg-primary/5 px-3 py-1.5 md:px-4 md:py-2 bg-transparent"
+          className="flex items-center gap-1.5 font-body text-sm text-foreground/80 transition-colors border border-white/30 hover:bg-white/10 px-3 py-1.5 md:px-4 md:py-2 bg-white/10"
         >
           <ArrowLeft className="w-4 h-4" />
           Back
@@ -76,7 +76,7 @@ const CalendarStep = ({ onSelect, onBack }: CalendarStepProps) => {
         initial={{ y: 15, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.1 }}
-        className="font-script text-[2.5rem] md:text-[4.5rem] text-primary leading-none text-center mb-0 md:mb-1"
+        className="font-script text-[2.5rem] md:text-[4.5rem] text-foreground leading-none text-center mb-0 md:mb-1"
       >
         Pick a Date
       </motion.h2>
@@ -84,7 +84,7 @@ const CalendarStep = ({ onSelect, onBack }: CalendarStepProps) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className="font-body text-muted-foreground text-xs md:text-sm text-center mb-3 md:mb-8"
+        className="font-body text-foreground/80 text-xs md:text-sm text-center mb-3 md:mb-8"
       >
         choose the perfect day to care
       </motion.p>
@@ -97,24 +97,24 @@ const CalendarStep = ({ onSelect, onBack }: CalendarStepProps) => {
         className="w-full flex-1 flex flex-col relative min-h-0"
       >
         {/* Sticky Month Selector */}
-        <div className="sticky top-0 z-20 bg-background/95 backdrop-blur-md py-2 md:py-4 flex items-center justify-between border-b border-primary/20 mb-3 md:mb-6 px-1">
-          <button onClick={prevMonth} className="p-2 md:p-2.5 rounded-md border border-primary/30 hover:bg-primary/5 transition-all shadow-sm bg-background text-primary flex items-center justify-center">
+        <div className="sticky top-0 z-20 bg-background/90 backdrop-blur-md py-2 md:py-4 flex items-center justify-between border-b border-white/20 mb-3 md:mb-6 px-1">
+          <button onClick={prevMonth} className="p-2 md:p-2.5 rounded-md border border-white/30 hover:bg-white/10 transition-all bg-white/10 text-foreground flex items-center justify-center">
             <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
           </button>
           <h3 className="font-body font-bold text-lg md:text-2xl text-foreground text-center tracking-wide">
             {MONTH_NAMES[month]} {year}
           </h3>
-          <button onClick={nextMonth} className="p-2 md:p-2.5 rounded-md border border-primary/30 hover:bg-primary/5 transition-all shadow-sm bg-background text-primary flex items-center justify-center">
+          <button onClick={nextMonth} className="p-2 md:p-2.5 rounded-md border border-white/30 hover:bg-white/10 transition-all bg-white/10 text-foreground flex items-center justify-center">
             <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
           </button>
         </div>
 
         {/* Header row */}
-        <div className="grid grid-cols-7 border-t border-l border-primary/30">
+        <div className="grid grid-cols-7 border-t border-l border-white/20">
           {DAY_NAMES.map(d => (
             <div
               key={d}
-              className="border-r border-b border-primary/30 px-1 md:px-4 py-2 md:py-3 font-body font-semibold text-muted-foreground text-[10px] sm:text-xs md:text-sm uppercase tracking-wider text-center flex items-center justify-center"
+              className="border-r border-b border-white/20 px-1 md:px-4 py-2 md:py-3 font-body font-semibold text-foreground/60 text-[10px] sm:text-xs md:text-sm uppercase tracking-wider text-center flex items-center justify-center"
             >
               {d}
             </div>
@@ -122,10 +122,10 @@ const CalendarStep = ({ onSelect, onBack }: CalendarStepProps) => {
         </div>
 
         {/* Day cells */}
-        <div className="grid grid-cols-7 flex-1 min-h-0 auto-rows-[1fr] border-l border-primary/30 mt-1 md:mt-2">
+        <div className="grid grid-cols-7 flex-1 min-h-0 auto-rows-[1fr] border-l border-white/20 mt-1 md:mt-2">
           {/* Empty cells */}
           {Array.from({ length: firstDay }).map((_, i) => (
-            <div key={`empty-${i}`} className="border-r border-b border-primary/30" />
+            <div key={`empty-${i}`} className="border-r border-b border-white/20" />
           ))}
 
           {/* Days */}
@@ -141,18 +141,18 @@ const CalendarStep = ({ onSelect, onBack }: CalendarStepProps) => {
                 key={day}
                 disabled={isPast}
                 onClick={() => handleDayClick(day)}
-                whileHover={!isPast ? { backgroundColor: 'hsl(350 72% 46% / 0.04)' } : undefined}
+                whileHover={!isPast ? { backgroundColor: 'rgba(255,255,255,0.08)' } : undefined}
                 className={`
-                  relative border-r border-b border-primary/30 p-1 md:p-2 flex flex-col items-center justify-center transition-colors
-                  ${isPast ? 'text-muted-foreground/30 bg-muted/20 cursor-not-allowed' : 'cursor-pointer'}
-                  ${isSelected ? 'bg-primary/5' : ''}
+                  relative border-r border-b border-white/20 p-1 md:p-2 flex flex-col items-center justify-center transition-colors
+                  ${isPast ? 'text-foreground/20 cursor-not-allowed' : 'cursor-pointer'}
+                  ${isSelected ? 'bg-white/10' : ''}
                 `}
               >
                 <div className="relative flex items-center justify-center w-8 h-8 md:w-10 md:h-10">
                   <span className={`
                     font-body text-sm md:text-base relative z-10
-                    ${isSelected ? 'text-primary font-bold' : ''}
-                    ${isToday && !isSelected ? 'font-semibold text-primary' : ''}
+                    ${isSelected ? 'text-foreground font-bold' : ''}
+                    ${isToday && !isSelected ? 'font-semibold text-foreground' : ''}
                   `}>
                     {day}
                   </span>
@@ -162,7 +162,7 @@ const CalendarStep = ({ onSelect, onBack }: CalendarStepProps) => {
                       animate={{ scale: 1 }}
                       className="absolute inset-0 flex items-center justify-center pointer-events-none"
                     >
-                      <Heart className="absolute w-12 h-12 md:w-14 md:h-14 text-primary" strokeWidth={1.2} fill="transparent" />
+                      <Heart className="absolute w-12 h-12 md:w-14 md:h-14 text-foreground" strokeWidth={1.2} fill="transparent" />
                     </motion.div>
                   )}
                 </div>
@@ -175,7 +175,7 @@ const CalendarStep = ({ onSelect, onBack }: CalendarStepProps) => {
 
           {/* Trailing empty cells */}
           {Array.from({ length: remainingCells }).map((_, i) => (
-            <div key={`trail-${i}`} className="border-r border-b border-primary/30 p-1 md:p-2 flex flex-col items-center justify-start pt-2 md:pt-3">
+            <div key={`trail-${i}`} className="border-r border-b border-white/20 p-1 md:p-2 flex flex-col items-center justify-start pt-2 md:pt-3">
               <span className="font-body text-sm md:text-base text-muted-foreground/20">
                 {i + 1}
               </span>
@@ -192,12 +192,12 @@ const CalendarStep = ({ onSelect, onBack }: CalendarStepProps) => {
               exit={{ height: 0, opacity: 0, y: 10 }}
               className="flex-shrink-0 mt-3 md:mt-4 overflow-hidden"
             >
-              <div className="flex flex-col gap-3 md:gap-4 p-4 md:p-5 rounded-xl border border-primary/20 bg-background/50 backdrop-blur-sm shadow-sm">
+              <div className="flex flex-col gap-3 md:gap-4 p-4 md:p-5 rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm shadow-sm">
                 <div className="flex justify-between items-center mb-1 md:mb-2">
-                  <span className="flex items-center gap-1.5 text-primary text-sm md:text-base font-body font-bold">
+                  <span className="flex items-center gap-1.5 text-foreground text-sm md:text-base font-body font-bold">
                     <Clock className="w-4 h-4 md:w-5 md:h-5" /> Pick a Time
                   </span>
-                  <span className="text-muted-foreground text-xs md:text-sm font-body font-medium">
+                  <span className="text-foreground/60 text-xs md:text-sm font-body font-medium">
                     {MONTH_NAMES[month]} {selectedDay}, {year}
                   </span>
                 </div>
@@ -208,7 +208,7 @@ const CalendarStep = ({ onSelect, onBack }: CalendarStepProps) => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => handleTimeSelect(time)}
-                      className="px-1 py-2 md:px-3 md:py-2.5 text-xs md:text-sm font-body font-semibold border border-primary/30 rounded-lg md:rounded-xl hover:border-primary/60 hover:bg-primary/5 transition-all text-foreground text-center flex items-center justify-center shadow-sm"
+                      className="px-1 py-2 md:px-3 md:py-2.5 text-xs md:text-sm font-body font-semibold border border-white/30 rounded-lg md:rounded-xl hover:bg-primary hover:border-primary hover:text-primary-foreground transition-all text-foreground text-center flex items-center justify-center"
                     >
                       {time}
                     </motion.button>
